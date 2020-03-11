@@ -1,11 +1,13 @@
 CC=g++
 CFLAGS = -c
 
-all: allocator.o test_functions.o start_test.o
-	$(CC) allocator.o test_functions.o start_test.o -o start_test
+all: assembly
 
-test: 
+test: assembly
 	./start_test
+
+assembly: allocator.o test_functions.o start_test.o
+	$(CC) allocator.o test_functions.o start_test.o -o start_test
 
 allocator.o: allocator.cpp allocator.h
 	$(CC) $(CFLAGS) allocator.cpp
