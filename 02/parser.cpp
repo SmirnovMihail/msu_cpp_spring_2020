@@ -1,9 +1,10 @@
 #include "parser.h"
+#include <stdlib.h>
 
 void default_begin() {}
 void default_end() {}
-void default_num(char* num) {}
-void default_str(char* str) {}
+void default_num(int num) {}
+void default_str(const char* str) {}
 
 void universal_processor(Buffer &buffer, bool number,
                          on_num_processor num_func,
@@ -12,14 +13,14 @@ void universal_processor(Buffer &buffer, bool number,
     if (char *token = buffer.get())
     {
         if (number)
-            num_func(token);
+            num_func(atoi(token));
         else
             str_func(token);
         buffer.reset();
     }
 }
 
-void string_parser(char* str, on_num_processor num_func,
+void string_parser(const char* str, on_num_processor num_func,
                    on_str_processor str_func, on_begin_f begin, on_end_f end)
 {
     Buffer buffer(16);

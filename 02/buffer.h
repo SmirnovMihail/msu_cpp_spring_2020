@@ -1,11 +1,13 @@
+#include <iostream>
+
 class Buffer
 {
     char* string;
-    int len;
-    int busy;
+    size_t len;
+    size_t busy;
     void extend();
 public:
-    Buffer(int len);
+    Buffer(size_t len);
     void add_char(char c);
     void reset();
     char* get();

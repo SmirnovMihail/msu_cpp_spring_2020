@@ -1,7 +1,7 @@
 #include "buffer.h"
 #include <string>
 
-Buffer :: Buffer(int length)
+Buffer :: Buffer(size_t length)
 {
     busy = 0;
     len = length;
