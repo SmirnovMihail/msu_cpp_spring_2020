@@ -23,6 +23,9 @@ void universal_processor(Buffer &buffer, bool number,
 void string_parser(const char* str, on_num_processor num_func,
                    on_str_processor str_func, on_begin_f begin, on_end_f end)
 {
+    if (!num_func or !str_func or !begin or !end)
+        std :: cerr << "Can't process null callback function\n";
+        exit(1);
     Buffer buffer(16);
     begin();
     int i=0;
