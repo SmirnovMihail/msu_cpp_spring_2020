@@ -57,7 +57,7 @@ void test()
     printf("--------------------------------------\n\n");
 
     string_parser(string1, num_callback, str_callback,
-                  begin_callback, nullptr);
+                  begin_callback, end_callback);
 
     printf("--------------------------------------\n");
     printf("Test 2\n");
