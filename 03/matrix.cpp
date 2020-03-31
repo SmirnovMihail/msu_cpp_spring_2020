@@ -1,10 +1,11 @@
 #include "matrix.h"
 
-int& Helper :: operator[](int column) const
+int& Helper :: operator[](size_t column) const
 {
-    if (column >= m.columns)
+    size_t m_columns = m.get_columns();
+    if (column >= m_columns)
         throw std::out_of_range("");
-    return m.matrix[row*m.columns + column];
+    return m.get_matrix()[row*m_columns + column];
 }
 
 Matrix :: Matrix(size_t row_num, size_t column_num)
@@ -27,19 +28,25 @@ size_t Matrix :: get_columns() const
     return columns;
 }
 
-const Helper Matrix :: operator[](int row) const
+int* Matrix :: get_matrix() const
+{
+    return matrix;
+}
+
+const Helper Matrix :: operator[](size_t row) const
 {
     if (row >= rows)
         throw std::out_of_range("");
     return Helper(*this, row);
 }
 
-void Matrix :: operator*=(int number)
+Matrix& Matrix :: operator*=(int number)
 {
     for (int i=0; i < size; i++)
     {
         matrix[i] *= number;
     }
+    return *this;
 }
 
 bool Matrix :: operator==(const Matrix& second) const
