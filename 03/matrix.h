@@ -4,7 +4,6 @@ class Helper;
 
 class Matrix
 {
-    friend class Helper;
     int *matrix;
     size_t columns;
     size_t rows;
