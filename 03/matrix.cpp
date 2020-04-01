@@ -2,17 +2,15 @@
 
 int& Helper :: operator[](size_t column) const
 {
-    size_t m_columns = m.get_columns();
-    if (column >= m_columns)
+    if (column >= max_columns)
         throw std::out_of_range("");
-    return m.get_matrix()[row*m_columns + column];
+    return row[column];
 }
 
-Matrix :: Matrix(size_t row_num, size_t column_num)
+Matrix :: Matrix(size_t row_num, size_t column_num) : rows(row_num),
+                                                      columns(row_num),
+                                                      size(rows*columns)
 {
-    rows = row_num;
-    columns = column_num;
-    size = rows*columns;
     matrix = new int[size];
     for (int i=0; i < size; i++)
         matrix[i] = 0;
@@ -28,16 +26,11 @@ size_t Matrix :: get_columns() const
     return columns;
 }
 
-int* Matrix :: get_matrix() const
-{
-    return matrix;
-}
-
 const Helper Matrix :: operator[](size_t row) const
 {
     if (row >= rows)
         throw std::out_of_range("");
-    return Helper(*this, row);
+    return Helper(matrix + row*columns, columns);
 }
 
 Matrix& Matrix :: operator*=(int number)
