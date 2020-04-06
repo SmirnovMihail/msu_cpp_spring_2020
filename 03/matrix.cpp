@@ -1,6 +1,13 @@
 #include "matrix.h"
 
-int& Helper :: operator[](size_t column) const
+int& Helper :: operator[](size_t column)
+{
+    if (column >= max_columns)
+        throw std::out_of_range("");
+    return row[column];
+}
+
+int Helper :: operator[](size_t column) const
 {
     if (column >= max_columns)
         throw std::out_of_range("");
@@ -24,6 +31,13 @@ size_t Matrix :: get_rows() const
 size_t Matrix :: get_columns() const
 {
     return columns;
+}
+
+Helper Matrix :: operator[](size_t row)
+{
+    if (row >= rows)
+        throw std::out_of_range("");
+    return Helper(matrix + row*columns, columns);
 }
 
 const Helper Matrix :: operator[](size_t row) const
