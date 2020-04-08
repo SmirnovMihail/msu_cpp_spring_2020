@@ -11,12 +11,13 @@ class Serializer
 {
     static constexpr char separator = ' ';
     std :: ostream& out;
-    template <class T> Error process(T& val)
+    template <class T> Error process(const T& val)
     {
         return out_one(val);
     }
 
-    template <class T, class... ArgsT> Error process(T& val, ArgsT&... args)
+    template <class T, class... ArgsT>
+    Error process(const T& val, const ArgsT&... args)
     {
         const Error err = out_one(val);
         if (err == Error::NoError)
@@ -24,18 +25,13 @@ class Serializer
         return err;
     }
 
-    template <class T> Error out_one(T& val)
-    {
-        return Error :: CorruptedArchive;
-    }
-    
-    template <> Error out_one<uint64_t>(uint64_t& num)
+    Error out_one(const uint64_t& num) const
     {
         out << num << separator;
         return Error :: NoError;
     }
 
-    template <> Error out_one<bool>(bool& b)
+    Error out_one(const bool& b) const
     {
         std :: string text;
         if (b == true)
@@ -54,7 +50,7 @@ public:
         return object.serialize(*this);
     }
 
-    template <class... ArgsT> Error operator()(ArgsT... args)
+    template <class... ArgsT> Error operator()(const ArgsT& ... args)
     {
         return process(args...);
     }  
@@ -77,12 +73,7 @@ class Deserializer
         return err;
     }
 
-    template <class T> Error in_one(T& val)
-    {
-        return Error :: CorruptedArchive;
-    }
-
-    template <> Error in_one<bool>(bool& value)
+    Error in_one(bool& value) const
     {
         std::string text;
         in_ >> text;
@@ -95,7 +86,7 @@ class Deserializer
         return Error::NoError;
     }
 
-    template <> Error in_one<uint64_t>(uint64_t& num)
+    Error in_one(uint64_t& num) const
     {
         std::string text;
         in_ >> text;
