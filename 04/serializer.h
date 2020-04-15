@@ -95,7 +95,7 @@ class Deserializer
             num = std :: stoull(text);
             return Error :: NoError;
         }
-        catch(...)
+        catch(std::invalid_argument)
         {
             return Error :: CorruptedArchive;
         }
