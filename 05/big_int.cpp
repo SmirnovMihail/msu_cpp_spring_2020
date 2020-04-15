@@ -39,7 +39,8 @@ std::ostream& operator<<(std::ostream& out, const BigInt& b)
     if (b.v.size() == 0)
         out << 0;
 
-    for (int i=b.v.size()-1; i>=0; i--)
+    size_t i=b.v.size()-1;
+    while (i >= 0)
     {
         if (i != b.v.size()-1)
         {
@@ -47,10 +48,13 @@ std::ostream& operator<<(std::ostream& out, const BigInt& b)
             int j;
             for (j=0; part; j++)
                 part=part/10;
-            for (size_t k=0; k < std::min(4-j, 3); k++)
+            for (int k=0; k < std::min(4-j, 3); k++)
                 out << 0;
         }
         out << b.v[i];
+        if (i == 0)
+            break;
+        i--;
     }
     return out;
 }
@@ -105,10 +109,14 @@ bool BigInt :: operator==(const BigInt& b) const
 {
     if (v.size() != b.v.size())
         return false;
-    for (int i = v.size()-1; i>=0; i--)
+    size_t i = v.size()-1;
+    while(i >= 0)
     {
         if (v[i] != b.v[i])
             return false;
+        if (i == 0)
+            break;
+        i--;
     }
     return true;
 }
@@ -119,10 +127,14 @@ bool BigInt :: operator<(const BigInt& b) const
         return false;
     if (v.size() < b.v.size())
         return true;
-    for (int i = v.size()-1; i>=0; i--)
+    size_t i = v.size()-1;
+    while(i >= 0)
     {
         if (v[i] < b.v[i])
             return true;
+        if (i == 0)
+            break;
+        i--;
     }
     return false;
 }
