@@ -22,8 +22,8 @@ public:
     void reset();
     IntList* get_last() const { return last; }
     size_t size() const { return len; }
-    int& operator[](int i);
-    int operator[](int i) const;
+    int& operator[](size_t i);
+    int operator[](size_t i) const;
     ~IntVector();
 };
 

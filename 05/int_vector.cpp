@@ -77,27 +77,26 @@ int IntVector :: pop_back()
     return 0;
 }
 
-int& IntVector :: operator[](int i)
+int& IntVector :: operator[](size_t i)
 {
     if  (i >= len)
     {
-        int zero = 0;
-        return zero;
+        throw std :: runtime_error("Index is out of range");
     }
     IntList *tmp = list;
-    for (int j = 0; j != i; j++)
+    for (size_t j = 0; j != i; j++)
     {
         tmp = tmp -> next;
     }
     return tmp -> number;
 }
 
-int IntVector :: operator[](int i) const
+int IntVector :: operator[](size_t i) const
 {
     if  (i >= len)
         return last -> number;
     IntList *tmp = list;
-    for (int j = 0; j != i; j++)
+    for (size_t j = 0; j != i; j++)
     {
         tmp = tmp -> next;
     }

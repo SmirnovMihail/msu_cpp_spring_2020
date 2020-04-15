@@ -16,7 +16,8 @@ BigInt :: BigInt(const char *s)
     int number;
     char* str = new char[strlen(s)];
     strcpy(str, s);
-    for (int i=(int)strlen(str); i>0; i-=4)
+    size_t i=strlen(str);
+    while (i > 0)
     {
         str[i] = 0;
         if (i >= 4)
@@ -24,6 +25,9 @@ BigInt :: BigInt(const char *s)
         else
             number = atoi(str);
         v.push_back(number);
+        if (i < 4)
+            break;
+        i -= 4;
     }
 }
 
@@ -43,7 +47,7 @@ std::ostream& operator<<(std::ostream& out, const BigInt& b)
             int j;
             for (j=0; part; j++)
                 part=part/10;
-            for (int k=0; k < std::min(4-j, 3); k++)
+            for (size_t k=0; k < std::min(4-j, 3); k++)
                 out << 0;
         }
         out << b.v[i];
@@ -90,7 +94,7 @@ BigInt BigInt :: operator-(const BigInt& b)
 BigInt& BigInt :: operator=(const BigInt& b)
 {
     v.reset();
-    for (int i=0; i<b.v.size(); i++)
+    for (size_t i=0; i<b.v.size(); i++)
     {
         v.push_back(b.v[i]);
     }
