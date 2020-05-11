@@ -1,3 +1,3 @@
-#include "string_format.cpp"
+#include "string_format.h"
 
 void test();

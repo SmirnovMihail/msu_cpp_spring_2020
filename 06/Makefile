@@ -6,16 +6,13 @@ all: assembly
 test: assembly
 	./start_test
 
-assembly: string_format.o test_functions.o start_test.o 
-	$(CC) string_format.o test_functions.o start_test.o -o start_test
-
-string_format.o: string_format.cpp
-	$(CC) $(CFLAGS) string_format.cpp
+assembly: test_functions.o start_test.o 
+	$(CC) test_functions.o start_test.o -o start_test
 
 start_test.o: test_functions.cpp
 	$(CC) $(CFLAGS) start_test.cpp
 
-test_functions.o: test_functions.cpp string_format.cpp
+test_functions.o: test_functions.cpp string_format.h
 	$(CC) $(CFLAGS) test_functions.cpp
 
 clean:
