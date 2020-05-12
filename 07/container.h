@@ -14,10 +14,10 @@ public:
     }
                     
     template<class... Args> void construct(T* p, Args&&... args) 
-    {
+    {   
         new(p) T(std::forward<Args>(args)...);
     }
-                        
+
     void deconstruct(T* p) 
     {
         p->~T();
@@ -91,10 +91,10 @@ template <class T> class Vector
 public:
     explicit Vector(size_t cnt = 0): ptr(alloc.allocate(cnt)), cur_size(cnt), size_(cnt)
     {
-        for (size_t i = 0; i < cur_size; ++i) 
+        /*for (size_t i = 0; i < cur_size; ++i) 
         {
             alloc.construct(ptr + i);
-        }
+        }*/
     }
                                 
     ~Vector() 

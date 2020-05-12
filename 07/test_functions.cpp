@@ -1,10 +1,20 @@
 #include <iostream>
 #include <sstream>
 #include "test_functions.h"
+#include <vector>
+
+class A
+{
+    int a;
+public:
+    A(int num) :a(num){};
+};
+
 
 void test1()
 {
     Vector<int> v(5);
+
     std::stringstream s;
 
     for (auto it = v.begin(); it != v.end(); ++it) 
@@ -12,6 +22,8 @@ void test1()
         s << *it;
     }
     assert(s.str() == "00000");
+   // std :: vector<A> a_vec(4);
+    Vector<A> a_vec(4);
 }
 
 void test2()
