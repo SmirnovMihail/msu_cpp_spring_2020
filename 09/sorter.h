@@ -6,6 +6,8 @@
 #include <thread>
 #include <exception>
 #include <algorithm>
+#include <mutex>
+#include <cstdlib>
 
 template <class T> T open_file(const char* file_name)
 {
@@ -24,3 +26,4 @@ void create_binary_file(std::ofstream &out);
 void merge(std::vector<std::string>& f_names);
 void clean_files(std::vector<std::string>& names); 
 void sort_file(std::ofstream& out);
+void thread_function(std::ofstream& out);

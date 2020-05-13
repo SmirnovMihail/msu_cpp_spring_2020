@@ -7,7 +7,7 @@ test: assembly
 	./start_prog
 
 assembly: sorter.o main.o
-	$(CC) sorter.o main.o -o start_prog
+	$(CC) sorter.o main.o -o start_prog -lpthread
 
 sorter.o: sorter.cpp sorter.h
 	$(CC) $(CFLAGS) sorter.cpp
