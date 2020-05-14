@@ -2,7 +2,14 @@
 
 int main()
 {
-    std :: ofstream bin_file = open_file<std :: ofstream>("input");
+    //std :: ofstream bin_file = open_file("input", 0);
+    std::ofstream bin_file("input", std::ios::binary);
+    if (!bin_file) 
+    {
+        std::cerr << "Can't open file: input" << std::endl;
+        return 1;
+    }
+
     create_binary_file(bin_file);
     bin_file.close();
 
@@ -15,5 +22,6 @@ int main()
         std::cerr << err.what() << std::endl;
         return 1;
     }
-    return 0;
+    
+    return check_sorted();
 }
