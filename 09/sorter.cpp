@@ -1,5 +1,6 @@
 #include "sorter.h"
 
+//static ReaderWriterLockSlim _rwLock = new ReaderWriterLockSlim();
 const size_t MAXSIZE = 1024 * 1024;
 
 std :: recursive_mutex tmp_lock, new_lock, _lock;
@@ -7,21 +8,23 @@ std :: recursive_mutex tmp_lock, new_lock, _lock;
 void file_copy(const std::string& name1, const std::string& name2)
 {
     new_lock.lock();
-    auto *buf = new uint64_t [MAXSIZE];
+
+    std::unique_ptr<uint64_t> buf(new uint64_t [MAXSIZE]);
+    //auto *buf = new uint64_t [MAXSIZE];
+
     std::ifstream in(name1, std::ios::binary);
     std::ofstream out(name2, std::ios::binary);
 
     while (!in.eof()) 
     {
-        in.read((char*) buf, 1024 * 1024);
+        in.read((char*) buf.get(), 1024 * 1024);
         if (in.gcount()) 
         {
-            out.write((char*) buf, in.gcount());
+            out.write((char*) buf.get(), in.gcount());
         }
     }
     out.close();
     in.close();
-    delete[] buf;
     new_lock.unlock();
 }
 
@@ -74,14 +77,14 @@ void merge(std::vector<std::string>& f_names)
         if (in.gcount()) 
         {
             out.write((char*) &c1, sizeof(c1));
-            auto *buf = new uint64_t[MAXSIZE];
+
+            std::unique_ptr<uint64_t> buf(new uint64_t [MAXSIZE]);
 
             while (!in.eof()) 
             {
-                in.read((char*) buf, MAXSIZE);
-                out.write((char*) buf, in.gcount());
+                in.read((char*) buf.get(), MAXSIZE);
+                out.write((char*) buf.get(), in.gcount());
             }
-            delete[] buf;
         }
     }
 }
@@ -118,24 +121,23 @@ void thread_function(std::ofstream& out)
         std::string name = "output" + std::to_string(i) + ".bin";
         names.push_back(name);
 
-        auto *buf = new uint64_t [MAXSIZE];
+        std::unique_ptr<uint64_t> buf(new uint64_t [MAXSIZE]);
 
-        in.read((char*) buf, MAXSIZE);
+        in.read((char*) buf.get(), MAXSIZE);
         size_t cnt = in.gcount();
         
         if(cnt)
         {
             size_t read_ = cnt / (2 * sizeof(uint64_t));
 
-            std::sort(buf, buf + 2 * read_);
+            std::sort(buf.get(), buf.get() + 2 * read_);
 
             out.open(name, std::ios::binary);
             if(!out.is_open()) 
             {
-                delete[] buf;
                 throw std::runtime_error("Can't open file: " + name);
             }
-            out.write((char*) buf, read_ * sizeof(uint64_t));
+            out.write((char*) buf.get(), read_ * sizeof(uint64_t));
             out.close();
 
             ++i;
@@ -145,13 +147,11 @@ void thread_function(std::ofstream& out)
             out.open(name, std::ios::binary);
             if(!out.is_open())
             {
-                delete[] buf;
                 throw std::runtime_error("Can't open file: " + name);
             }
-            out.write((char*) (buf + read_), cnt - read_ * sizeof(uint64_t));
+            out.write((char*) (buf.get() + read_), cnt - read_ * sizeof(uint64_t));
             out.close();
         }
-        delete[] buf;
         _lock.unlock();
     }
 
@@ -179,28 +179,27 @@ int check_sorted()
         std::cerr << "Can't open file: output" << std::endl;
         return 1;
     }
-    auto *buf = new uint64_t[MAXSIZE];
+    std::unique_ptr<uint64_t> buf(new uint64_t [MAXSIZE]);
     
     bool sorted = true;
     while (!in.eof()) 
     {
         //size_t len = in.read((char*) buf, MAXSIZE);
-        in.read((char*) buf, MAXSIZE);
+        in.read((char*) buf.get(), MAXSIZE);
         //buf[len] = 0;
 
         //if (len > 0)
         //{
-        auto elem = buf[0];
-        for (size_t i = 1; buf[i]; i++)
+        auto elem = buf.get()[0];
+        for (size_t i = 1; buf.get()[i]; i++)
         {
-            if (buf[i] < elem)
+            if (buf.get()[i] < elem)
                 sorted = false;
             else
-                elem = buf[i];
+                elem = buf.get()[i];
         }
         //}
     }
-    delete[] buf;
     if (sorted)
         printf("\nFile sorted successfully\n\n");
     else
